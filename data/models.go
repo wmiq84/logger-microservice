@@ -48,7 +48,7 @@ func (l *LogEntry) Insert(entry LogEntry) error {
 	})
 
 	if err != nil {
-		log.Println("Error inserting into logs")
+		log.Println("Error inserting into logs", err)
 		return err
 	}
 
@@ -139,7 +139,7 @@ func (l *LogEntry) Update() (*mongo.UpdateResult, error) {
 
 	collection := client.Database("logs").Collection("logs")
 
-	docID, err := primitive.ObjectIDFromHex(id)
+	docID, err := primitive.ObjectIDFromHex(l.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -150,9 +150,9 @@ func (l *LogEntry) Update() (*mongo.UpdateResult, error) {
 		bson.D{
 			// ignore errors, about key IDs
 			{"$set", bson.D{
-				{"name": l.Name},
-				{"data": l.Data},
-				{"updated_at": time.Now()},
+				{"name", l.Name},
+				{"data", l.Data},
+				{"updated_at", time.Now()},
 			}},
 		},
 	)
