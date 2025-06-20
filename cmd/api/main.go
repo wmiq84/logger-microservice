@@ -25,6 +25,7 @@ const (
 var client *mongo.Client
 
 type Config struct {
+	// Models have LogEntry with Created, User, Data, etc...
 	Models data.Models
 }
 
@@ -58,6 +59,8 @@ func main() {
 	// register RPC server
 	err = rpc.Register(new(RPCServer))
 	go app.rpcListen()
+
+	go app.gRPCListen()
 
 	log.Println("Starting service on port", webPort)
 	srv := &http.Server{
